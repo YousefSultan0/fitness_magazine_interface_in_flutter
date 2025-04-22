@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'models/articles.dart';
 
 const String desc = 'لياقة لياقة   لياقة  لياقة لياقة لياقة لياقة لياقة لياقة   لياقة  لياقة لياقة لياقة لياقة لياقة لياقة   لياقة  لياقة لياقة لياقة لياقة لياقة لياقة   لياقة  لياقة لياقة لياقة لياقة';
 
@@ -45,7 +47,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: DefaultTabController(
-        length: 4,
+        length: allSections.length,
         child: HomePage(),
       ),
     );
@@ -55,10 +57,6 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatelessWidget{
   const HomePage({super.key});
 
-
-  static const String category = 'لياقة';
-  static const String title = 'لياقة لياقة   لياقة  لياقة لياقة لياقة لياقة';
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,39 +80,10 @@ class HomePage extends StatelessWidget{
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: ((context) => Page2())));
-                  },
-                  child: mainCard(color: Color(0xFFf05e8e))
-                  
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: ((context) => Page2())));
-                  },
-                  child: mainCard(color: Color(0xFFfccd0a)),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: ((context) => Page2())));
-                  },
-                  child: mainCard(color: Color(0xFF79bde8)),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: ((context) => Page2())));
-                  },
-                  child: mainCard(color: Color(0xFfB4cf66)),
-                ),                
+                createMainCard(article: beauty.first, context: context),
+                createMainCard(article: fitness.first, context: context),
+                createMainCard(article: health.first, context: context),
+                createMainCard(article: food.first, context: context),                
               ]
             ),
           ),
@@ -122,105 +91,21 @@ class HomePage extends StatelessWidget{
           TabBar(
             dividerHeight: 0,
             tabs: [
-              Tab(text: 'تغذية'),
-              Tab(text: 'صحة'),
-              Tab(text: 'جمال'),
-              Tab(text: 'لياقة'),
+              for (List<Article> section in allSections) 
+                Tab(text: section.first.category),
             ]
           ),
           Expanded(
             flex: 9,
             child: TabBarView(children: [
-              ListView(
-                padding: EdgeInsets.only(right: 10, left: 20, top: 10),
-                children: [
-                  Padding(padding: EdgeInsets.only(bottom: 20),child: 
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: ((context) => Page2())));
-                      },
-                      child: secondaryCard(color: Color(0xFfB4cf66)),
-                    )
-                  ),
-                  Padding(padding: EdgeInsets.only(bottom: 20),child: 
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: ((context) => Page2())));
-                      },
-                      child: secondaryCard(color: Color(0xFfB4cf66)),
-                    )
-                  ),
-                  Padding(padding: EdgeInsets.only(bottom: 20),child: 
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: ((context) => Page2())));
-                      },
-                      child: secondaryCard(color: Color(0xFfB4cf66)),
-                    )
-                  ),
-                ]
-              ),
-              ListView(
-                padding: EdgeInsets.only(right: 10, left: 20, top: 10),
-                children: [
-                  Padding(padding: EdgeInsets.only(bottom: 20),child: 
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: ((context) => Page2())));
-                      },
-                      child: secondaryCard(color: Color(0xFF79bde8)),
-                    )
-                  ),
-                  Padding(padding: EdgeInsets.only(bottom: 20),child: 
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: ((context) => Page2())));
-                      },
-                      child: secondaryCard(color: Color(0xFF79bde8)),
-                    )
-                  ),
-                ]
-              ),
-              ListView(
-                padding: EdgeInsets.only(right: 10, left: 20, top: 10),
-                children: [
-                  Padding(padding: EdgeInsets.only(bottom: 20),child: 
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: ((context) => Page2())));
-                      },
-                      child: secondaryCard(color: Color(0xFFf05e8e)),
-                    )
-                  ),
-                ]
-              ),
-              ListView(
-                padding: EdgeInsets.only(right: 10, left: 20, top: 10),
-                children: [
-                  Padding(padding: EdgeInsets.only(bottom: 20),child: 
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: ((context) => Page2())));
-                      },
-                      child: secondaryCard(color: Color(0xFFfccd0a)),
-                    )
-                  ),
-                ]
-              ),
+              for (List<Article> section in allSections)
+                ListView(
+                  padding: EdgeInsets.only(right: 10, left: 20, top: 10),
+                  children: [
+                    for (Article article in section)
+                      createSecondaryCard(article: article, context: context)
+                  ]
+                )
             ],),
           )
         ]
@@ -228,235 +113,279 @@ class HomePage extends StatelessWidget{
     );
   }
 
-  Container secondaryCard({required Color color}) {
-    return Container(
-      // height: 130,
-      clipBehavior: Clip.antiAlias,
-      padding: EdgeInsets.only(),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            spreadRadius: 1,
-            blurRadius: 6,
-            offset: Offset(-4, 4),
-          )
-        ]
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 2,
-            child: Image.asset(
-              'assets/icons/png/placeholder.png', 
-              height: 122,
-              fit: BoxFit.cover,
-            ),
+  Padding createSecondaryCard({required Article article, required BuildContext context}) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 20,),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+          context,
+          MaterialPageRoute(builder: ((context) => Page2(article:article))));
+        },
+        child: Container(
+          // height: 130,
+          clipBehavior: Clip.antiAlias,
+          padding: EdgeInsets.only(),
+          decoration: BoxDecoration(
+            color: article.backgroundColor,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                spreadRadius: 1,
+                blurRadius: 6,
+                offset: Offset(-4, 4),
+              )
+            ]
           ),
-          Expanded(
-            flex: 5,
-            child: Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.only(top: 9, right: 9, bottom: 20, left: 4),
-                  child: Text(
-                      desc,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontFamily: 'Somar',
-                    )
-                  ),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Image.asset(
+                  'assets/icons/png/placeholder.png', 
+                  height: 122,
+                  fit: BoxFit.cover,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+              ),
+              Expanded(
+                flex: 5,
+                child: Column(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 8),
-                      child: Icon(
-                        Icons.share,
-                        size: 30,
-                        color: Colors.white,
+                    Container(
+                      padding: EdgeInsets.only(top: 9, right: 9, bottom: 20, left: 4),
+                      child: Text(
+                          article.details,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: 'Somar',
+                        )
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 8, right: 8,),
-                      child: Icon(
-                        Icons.favorite_border,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 8, right: 8),
-                      child: Icon(
-                        Icons.visibility,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 8),
+                          child: Icon(
+                            Icons.share,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8, right: 8,),
+                          child: Icon(
+                            Icons.favorite_border,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8, right: 8),
+                          child: Icon(
+                            Icons.visibility,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ]
+                    )
                   ]
-                )
-              ]
-            ),
+                ),
+              ),
+          
+            ]
           ),
-      
-        ]
+        ),
       ),
     );
   }
 
-  Container mainCard({required Color color}) {
-    return Container(
-      padding: EdgeInsets.only(
-         
-        right: 8,
-        left: 12,
-      ),
-      
-      child: Row(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(bottom: 0),
-                child: Stack(
-                  children: [
-                    Image.asset(
-                      'assets/icons/png/placeholder.png',
-                      height: 200,
-                      width: 230,
-                    ),
-                    Positioned(
-                      top: 30,
-                      left: 15,
-                      child: Icon(
-                        Icons.favorite_border,
-                        size: 30,
-                        color: Colors.white,
+  GestureDetector createMainCard({required Article article, required BuildContext context}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+        context,
+        MaterialPageRoute(builder: ((context) => Page2(article:article))));
+      },
+
+      child: Container(
+        padding: EdgeInsets.only(         
+          right: 8,
+          left: 12,
+        ),
+        
+        child: Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(bottom: 0),
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Container(
+                          padding: EdgeInsets.only(bottom: 5,),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: CachedNetworkImage(
+                            imageUrl: article.imageUrl,
+                            placeholder: (context, url) => CircularProgressIndicator(),
+                            errorWidget: (context, url, error) => Icon(Icons.error),
+                          ),
+                          // child: Image.asset(
+                          //   article.imagePath,
+                          //   // height: 170,
+                          //   width: 250,
+                          //   fit: BoxFit.contain,
+                          // ),
+                        ),
                       ),
-                    )
-                  ]
+                      Positioned(
+                        top: 20,
+                        left: 12,
+                        child: Icon(
+                          Icons.favorite_border,
+                          size: 30,
+                          color: Colors.white,
+                        ),
+                      )
+                    ]
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 0,),
-                child: Container(
-                  padding: EdgeInsets.only(
-                    left: 24,
-                    right: 24,
-                    top: 4, 
-                    bottom: 4,
+                Padding(
+                  padding: EdgeInsets.only(bottom: 6, top: 8),
+                  child: Container(
+                    padding: EdgeInsets.only(
+                      left: 24,
+                      right: 24,
+                      top: 4, 
+                      bottom: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: article.backgroundColor,
+                    ),
+                    child: Text(
+                      article.category,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontFamily: 'Somar',
+                      )
+                    )
                   ),
-                  decoration: BoxDecoration(
-                    color: color,
-                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(right: 0,),
+                  width: 230,
                   child: Text(
-                    category,
+                    article.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
+                      color: Colors.black,
+                      fontSize: 16,
                       fontFamily: 'Somar',
                     )
                   )
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.only(right: 0,),
-                width: 230,
-                child: Text(
-                  title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontFamily: 'Somar',
+                Container(
+                  padding: EdgeInsets.only(right: 0,),
+                  width: 250,
+                  child: Text(
+                    article.details,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 16,
+                      fontFamily: 'Somar',
+                    )
                   )
-                )
-              ),
-              Container(
-                padding: EdgeInsets.only(right: 0,),
-                width: 230,
-                child: Text(
-                  desc,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16,
-                    fontFamily: 'Somar',
-                  )
-                )
-              ),
-            ]
-          ),
-        ]
+                ),
+              ]
+            ),
+          ]
+        ),
       ),
     );
   }
 }
 
 class Page2 extends StatelessWidget {
-  const Page2 ({super.key});
+
+  Article article;
+  Page2 ({super.key, required this.article});
 
   
   @override
-Widget build(BuildContext context) {
-    return Scaffold(
-      
-      body: Stack(
-        children: [
-          SizedBox(
-            height: double.infinity,
-            child: Column(
-              children: [Image.asset(
-                'assets/icons/png/placeholder.png',
-              ),]
-            )
-          ),
-          Positioned(
-             
-            right: 15,
-            top: 45,
-            child: GestureDetector(
-              child: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            
-
-          ),
-          Positioned(
-            top: 160,
-            bottom: 0,
-            right: 2,
-            left: 2,
-            child: ListView(
-              children: [
-                Container(
-                  padding: EdgeInsets.only(right: 12, left: 4, top: 30),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+  Widget build(BuildContext context) {
+      return Scaffold(
+        body: Stack(
+          children: [
+            SizedBox(
+              height: double.infinity,
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/icons/png/placeholder.png',
                   ),
-                  child: Text(
-                    desc * 20,
-                  )
-                            ),]
+                ]
+              )
             ),
-          )
-        ]
-      )
-    );
+            Positioned(
+              
+              right: 15,
+              top: 45,
+              child: GestureDetector(
+                child: Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              
+
+            ),
+            Positioned(
+              top: 160,
+              bottom: 0,
+              right: 2,
+              left: 2,
+              child: ListView(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(right: 12, left: 4, top: 30),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          article.title,
+                          style: TextStyle(
+                            fontSize: 26,
+                          )
+                        ),
+                        Text(article.details),
+                      ]
+                    )
+                  ),]
+              ),
+            )
+          ]
+        )
+      );
   }  
 }
